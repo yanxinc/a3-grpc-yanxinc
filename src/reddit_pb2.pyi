@@ -20,7 +20,7 @@ class User(_message.Message):
     def __init__(self, userID: _Optional[str] = ...) -> None: ...
 
 class Post(_message.Message):
-    __slots__ = ("title", "text", "video_url", "image_url", "author", "score", "state", "publication_date")
+    __slots__ = ("title", "text", "video_url", "image_url", "author", "score", "state", "publication_date", "subreddit_id", "tags")
     class State(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
         __slots__ = ()
         NORMAL: _ClassVar[Post.State]
@@ -37,6 +37,8 @@ class Post(_message.Message):
     SCORE_FIELD_NUMBER: _ClassVar[int]
     STATE_FIELD_NUMBER: _ClassVar[int]
     PUBLICATION_DATE_FIELD_NUMBER: _ClassVar[int]
+    SUBREDDIT_ID_FIELD_NUMBER: _ClassVar[int]
+    TAGS_FIELD_NUMBER: _ClassVar[int]
     title: str
     text: str
     video_url: str
@@ -45,7 +47,9 @@ class Post(_message.Message):
     score: int
     state: Post.State
     publication_date: str
-    def __init__(self, title: _Optional[str] = ..., text: _Optional[str] = ..., video_url: _Optional[str] = ..., image_url: _Optional[str] = ..., author: _Optional[_Union[User, _Mapping]] = ..., score: _Optional[int] = ..., state: _Optional[_Union[Post.State, str]] = ..., publication_date: _Optional[str] = ...) -> None: ...
+    subreddit_id: int
+    tags: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, title: _Optional[str] = ..., text: _Optional[str] = ..., video_url: _Optional[str] = ..., image_url: _Optional[str] = ..., author: _Optional[_Union[User, _Mapping]] = ..., score: _Optional[int] = ..., state: _Optional[_Union[Post.State, str]] = ..., publication_date: _Optional[str] = ..., subreddit_id: _Optional[int] = ..., tags: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class Comment(_message.Message):
     __slots__ = ("id", "comment_id", "post_id", "author", "text", "score", "state", "publication_date", "has_replies")
@@ -75,19 +79,41 @@ class Comment(_message.Message):
     has_replies: bool
     def __init__(self, id: _Optional[int] = ..., comment_id: _Optional[int] = ..., post_id: _Optional[int] = ..., author: _Optional[_Union[User, _Mapping]] = ..., text: _Optional[str] = ..., score: _Optional[int] = ..., state: _Optional[_Union[Comment.CommentState, str]] = ..., publication_date: _Optional[str] = ..., has_replies: bool = ...) -> None: ...
 
+class Subreddit(_message.Message):
+    __slots__ = ("id", "name", "state", "tags")
+    class SubredditState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+        __slots__ = ()
+        PUBLIC: _ClassVar[Subreddit.SubredditState]
+        PRIVATE: _ClassVar[Subreddit.SubredditState]
+        HIDDEN: _ClassVar[Subreddit.SubredditState]
+    PUBLIC: Subreddit.SubredditState
+    PRIVATE: Subreddit.SubredditState
+    HIDDEN: Subreddit.SubredditState
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    STATE_FIELD_NUMBER: _ClassVar[int]
+    TAGS_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    name: str
+    state: Subreddit.SubredditState
+    tags: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, id: _Optional[int] = ..., name: _Optional[str] = ..., state: _Optional[_Union[Subreddit.SubredditState, str]] = ..., tags: _Optional[_Iterable[str]] = ...) -> None: ...
+
 class CreatePostRequest(_message.Message):
-    __slots__ = ("title", "text", "video_url", "image_url", "author")
+    __slots__ = ("title", "text", "video_url", "image_url", "author", "subreddit_id")
     TITLE_FIELD_NUMBER: _ClassVar[int]
     TEXT_FIELD_NUMBER: _ClassVar[int]
     VIDEO_URL_FIELD_NUMBER: _ClassVar[int]
     IMAGE_URL_FIELD_NUMBER: _ClassVar[int]
     AUTHOR_FIELD_NUMBER: _ClassVar[int]
+    SUBREDDIT_ID_FIELD_NUMBER: _ClassVar[int]
     title: str
     text: str
     video_url: str
     image_url: str
     author: User
-    def __init__(self, title: _Optional[str] = ..., text: _Optional[str] = ..., video_url: _Optional[str] = ..., image_url: _Optional[str] = ..., author: _Optional[_Union[User, _Mapping]] = ...) -> None: ...
+    subreddit_id: int
+    def __init__(self, title: _Optional[str] = ..., text: _Optional[str] = ..., video_url: _Optional[str] = ..., image_url: _Optional[str] = ..., author: _Optional[_Union[User, _Mapping]] = ..., subreddit_id: _Optional[int] = ...) -> None: ...
 
 class CreatePostResponse(_message.Message):
     __slots__ = ("post_id", "post")

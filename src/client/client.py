@@ -21,6 +21,8 @@ class RedditClient:
         if "video_url" in post_data: post.video_url = post_data["video_url"]
         elif "image_url" in post_data: post.image_url = post_data["image_url"]
 
+        if "subreddit_id" in post_data: post.subreddit_id = post_data["subreddit_id"]
+
         response = self.stub.CreatePost(post)
         return response
     
@@ -76,6 +78,7 @@ class RedditClient:
 #         "title": "Post123",
 #         "text": "post post post",
 #         "image_url": "/path/to/image.img",
+#         "subreddit_id": 0,
 #         # "author": 'cindy2'
 #     }
 #     print(client.create_post(post_data))

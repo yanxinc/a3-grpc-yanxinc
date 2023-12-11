@@ -20,6 +20,8 @@ message Post{
     int32 score = 6;
     State state = 7;
     string publication_date = 8;
+    int32 subreddit_id = 9;
+    repeated string tags = 10;
 }
 
 message Comment{
@@ -40,6 +42,18 @@ message Comment{
     bool has_replies = 9;
 }
 
+message Subreddit{
+    enum SubredditState {
+        PUBLIC = 0;
+        PRIVATE = 1;
+        HIDDEN = 2;
+    }
+    int32 id = 1;
+    string name = 2;
+    SubredditState state = 3;
+    repeated string tags = 4;
+}
+
 enum VoteType {
     UPVOTE = 0;
     DOWNVOTE = 1;
@@ -53,6 +67,7 @@ message CreatePostRequest{
         string image_url = 4;
     }
     optional User author = 5;
+    optional int32 subreddit_id = 6;
 }
 
 message CreatePostResponse{

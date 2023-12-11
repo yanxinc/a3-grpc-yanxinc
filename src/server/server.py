@@ -17,6 +17,7 @@ class RedditService(reddit_pb2_grpc.RedditServiceServicer):
         self.post_id_tracker = len(db.posts)
         self.comments = db.comments
         self.comment_id_tracker = len(db.comments)
+        self.subreddits = db.subreddits
 
     def CreatePost(self, request, context):
         post_id = self.post_id_tracker
@@ -34,6 +35,12 @@ class RedditService(reddit_pb2_grpc.RedditServiceServicer):
         elif request.HasField("image_url"): post.image_url = request.image_url
 
         if request.HasField("author"): post.author.CopyFrom(request.author)
+        if request.HasField("subreddit_id"): 
+            if request.subreddit_id not in self.subreddits:
+                context.abort(grpc.StatusCode.NOT_FOUND, "Subreddit not found")
+            post.subreddit_id = request.subreddit_id       
+            for tag in self.subreddits[request.subreddit_id].tags:
+                post.tags.append(tag)
 
         self.posts[post_id] = post
     
